@@ -1,0 +1,112 @@
+<div class="exam-wrap" *ngIf="!examId(); else started">
+    <h1>Mock Exam</h1>
+    <p>Start a new exam (defaults are for development; adjust as you like).</p>
+  
+    <form class="start-form" (submit)="$event.preventDefault(); startExam()">
+        <label>
+          Questions:
+          <input
+            type="number"
+            min="1"
+            [ngModel]="countInput()"
+            (ngModelChange)="countInput.set(+$event || 1)"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </label>
+        <label>
+          Duration (sec):
+          <input
+            type="number"
+            min="60"
+            step="60"
+            [ngModel]="durationInput()"
+            (ngModelChange)="durationInput.set(+$event || 60)"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </label>
+        <button [disabled]="loading()">Start Exam</button>
+      </form>
+  
+    <p *ngIf="error()" class="err">{{ error() }}</p>
+  </div>
+  
+  <ng-template #started>
+    <div class="exam-wrap" *ngIf="q as q">
+      <header class="exam-header">
+        <div class="timer">
+          ⏱ {{ formatTime() }}
+          <div class="bar"><div class="fill" [style.width.%]="progressPct()"></div></div>
+          <small>{{ currentIdx()+1 }} / {{ questions().length }}</small>
+        </div>
+        <div class="nav">
+          <button (click)="prev()" [disabled]="currentIdx() === 0">◀ Prev</button>
+  
+          <div class="window">
+            <button
+              *ngFor="let i of pageWindow()"
+              [class.active]="i === currentIdx()"
+              (click)="goTo(i)"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+
+          <button (click)="openMap()">Map</button>
+  
+          <button (click)="next()" [disabled]="currentIdx() === questions().length - 1">Next ▶</button>
+        </div>
+      </header>
+  
+      <section class="question">
+        <div class="q-text">{{ q.questionText }}</div>
+        <ul class="options">
+          <li *ngFor="let opt of q.options">
+            <label>
+              <input
+                type="{{ q.multiSelect ? 'checkbox' : 'radio' }}"
+                name="opt-{{ currentIdx() }}"
+                [checked]="isSelected(opt.id)"
+                (change)="toggle(opt.id)"
+              />
+              <strong>{{ opt.id.toUpperCase() }}.</strong> {{ opt.text }}
+            </label>
+          </li>
+        </ul>
+  
+        <div class="actions">
+          <button (click)="submitCurrent()">Save answer</button>
+          <button class="danger" (click)="finishExam()">Finish exam</button>
+        </div>
+  
+        <p *ngIf="error()" class="err">{{ error() }}</p>
+      </section>
+    </div>
+
+    <!-- Questions Map Modal -->
+<div class="modal-backdrop" *ngIf="showMap()">
+    <div class="modal modal-map">
+      <div class="modal-head">
+        <h3>Questions ({{ questions().length }})</h3>
+        <button class="secondary" (click)="closeMap()">✕</button>
+      </div>
+  
+      <div class="grid">
+        <button
+          *ngFor="let i of allIndices()"
+          (click)="goToFromMap(i)"
+          [class.current]="i === currentIdx()"
+          [class.answered]="isAnswered(i)"
+          [title]="'Question ' + (i+1)"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+  
+      <div class="legend">
+        <span class="dot current"></span> Current
+        <span class="dot answered"></span> Answered
+      </div>
+    </div>
+  </div>
+  </ng-template>
+  

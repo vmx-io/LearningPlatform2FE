@@ -1,0 +1,97 @@
+<div *ngIf="loading()">Loading questions…</div>
+
+<div *ngIf="!loading() && q as q" class="learn-wrap">
+  <section class="question">
+    <div class="q-meta">
+      <h2>Question {{ currentIdx() + 1 }} / {{ questions().length }}</h2>
+      <small>{{ q.multiSelect ? 'Select all that apply' : 'Select one' }}</small>
+    </div>
+
+    <div class="q-text">{{ q.questionText }}</div>
+
+    <ul class="options">
+      <li *ngFor="let opt of q.options">
+        <label>
+          <input
+            type="{{ q.multiSelect ? 'checkbox' : 'radio' }}"
+            name="opt-{{ currentIdx() }}"
+            [checked]="isSelected(opt.id)"
+            (change)="toggle(opt.id)"
+          />
+          <!-- <strong>{{ opt.id.toUpperCase() }}.</strong>  -->
+          {{ opt.text }}
+        </label>
+        <section *ngIf="feedback() as fb" class="option-explanation">
+          <!-- <strong>{{ opt.id.toUpperCase() }}</strong>: -->
+          <span>{{ fb.explanations[opt.id].text }}</span>
+          <a
+            *ngIf="fb.explanations[opt.id].url"
+            [href]="fb.explanations[opt.id].url"
+            target="_blank"
+            rel="noopener"
+          >
+            source
+          </a>
+        </section>
+      </li>
+    </ul>
+
+    <div class="actions">
+      <button (click)="submit()">Check</button>
+      <button class="secondary" (click)="resetCurrent()">Reset</button>
+    </div>
+
+    <section *ngIf="feedback() as fb" class="feedback">
+      <p class="result">
+        <strong>Result:</strong>
+        <span [class.ok]="fb.isCorrect" [class.bad]="!fb.isCorrect">
+          {{ fb.isCorrect ? 'Correct ✅' : 'Incorrect ❌' }}
+        </span>
+      </p>
+
+      <p *ngIf="!fb.isCorrect" class="correct-line">
+        Correct answers:
+        <code>{{ fb.correct.join(', ').toUpperCase() }}</code>
+      </p>
+    </section>
+  </section>
+
+  <!-- Footer Navigation -->
+  <footer class="learn-footer">
+    <div class="nav-row">
+      <button (click)="prev()" [disabled]="currentIdx() === 0">◀ Previous</button>
+      <button (click)="openJump()">Jump to</button>
+      <button (click)="random()">Random</button>
+
+      <div class="window">
+        <button
+          *ngFor="let i of pageWindow()"
+          [class.active]="i === currentIdx()"
+          (click)="goTo(i)"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+
+      <button (click)="next()" [disabled]="currentIdx() === questions().length - 1">Next ▶</button>
+    </div>
+  </footer>
+</div>
+
+<!-- Jump-to Modal -->
+<div class="modal-backdrop" *ngIf="showJump()">
+  <div class="modal">
+    <h3>Jump to question</h3>
+    <p>Enter a question number (1–{{ questions().length }}):</p>
+    <input
+      type="number"
+      min="1"
+      [max]="questions().length"
+      [(ngModel)]="jumpValueStr"
+    />
+    <div class="modal-actions">
+      <button (click)="confirmJump()">Go</button>
+      <button class="secondary" (click)="closeJump()">Cancel</button>
+    </div>
+  </div>
+</div>

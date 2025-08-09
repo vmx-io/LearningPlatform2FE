@@ -1,0 +1,17 @@
+.review-wrap { max-width: 1000px; margin: 0 auto; padding: 16px; }
+
+.summary {
+  display: grid; gap: 12px; align-items: center;
+  grid-template-columns: 1fr auto;
+  .stats { display: flex; gap: 16px; flex-wrap: wrap; }
+  .controls { display: flex; gap: 8px; align-items: center; }
+  .ok { color: #0a7b28; } .bad { color: #b00020; }
+}
+
+.items { margin-top: 16px; }
+.item { padding: 12px 0; border-top: 1px solid #eee; }
+.grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr 1fr; align-items: start; }
+.col ul { margin: 0; padding-left: 18px; }
+.verdict { font-weight: 700; }
+.exps { list-style: none; padding: 0; }
+.exps li { margin: 6px 0; }

@@ -1,0 +1,120 @@
+.learn-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .learn-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+  
+    .q-meta h2 { margin: 0 0 4px; }
+    .nav-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+  
+      .window {
+        display: inline-flex;
+        gap: 4px;
+        margin: 0 8px;
+  
+        button {
+          min-width: 40px;
+          &.active { font-weight: 700; text-decoration: underline; }
+        }
+      }
+    }
+  }
+  
+  .question .q-text {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  .options {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+  .options li { margin: 6px 0; }
+  .actions { display: flex; gap: 8px; }
+  
+  .feedback {
+    margin-top: 16px;
+    border-top: 1px solid #e7e7e7;
+    padding-top: 12px;
+  
+    .result { margin: 0 0 8px; }
+    .ok { color: #0a7b28; }
+    .bad { color: #b00020; }
+    .explanations { list-style: none; padding: 0; }
+    .explanations li { margin: 6px 0; }
+    .correct-line { margin-top: 8px; }
+  }
+
+  .option-explanation {
+    border: 1px solid #eee; border-radius: 10px; padding: 12px; margin: 12px 0; background: #fafafa;
+    .result { margin: 0 0 8px; }
+    .ok { color: #0a7b28; }
+    .bad { color: #b00020; }
+    .explanations { list-style: none; padding: 0; }
+    .explanations li { margin: 6px 0; }
+    .correct-line { margin-top: 8px; }
+  }
+
+  .box {
+    border: 1px solid #eee; border-radius: 10px; padding: 12px; margin: 12px 0; background: #fafafa;
+    .row {
+      display: grid; grid-template-columns: 140px 1fr auto; gap: 8px; align-items: center; margin: 8px 0;
+      .k { color: #666; }
+      .v input { width: 50%; padding: 6px; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    }
+  }
+  
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.35);
+    display: grid; place-items: center;
+  }
+  .modal {
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    min-width: 300px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  
+    .modal-actions { display: flex; gap: 8px; margin-top: 10px; }
+  }
+  
+  .learn-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #f9f9f9;
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    z-index: 1000;
+  
+    .nav-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+  
+      .window {
+        display: flex;
+        gap: 4px;
+      }
+    }
+  }
+  
+  .learn-wrap {
+    padding-bottom: 70px; /* prevent footer overlap */
+  }

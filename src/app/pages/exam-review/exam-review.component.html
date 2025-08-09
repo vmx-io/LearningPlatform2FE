@@ -1,0 +1,75 @@
+<div class="review-wrap" *ngIf="loading()">Loading review…</div>
+
+<div class="review-wrap" *ngIf="!loading() && exam() as ex">
+  <header class="summary">
+    <h1>Exam Review</h1>
+    <div class="stats">
+      <div><strong>Score:</strong> {{ ex.scorePercent ?? 0 | number:'1.0-2' }}%</div>
+      <div>
+        <strong>Status:</strong>
+        <span [class.ok]="ex.passed" [class.bad]="ex.passed === false">
+          {{ ex.passed ? 'Passed' : (ex.passed === false ? 'Failed' : '—') }}
+        </span>
+      </div>
+      <div><strong>Correct:</strong> {{ ex.correct }}</div>
+      <div><strong>Wrong:</strong> {{ ex.wrong }}</div>
+    </div>
+
+    <div class="controls">
+      <label>Language:
+        <select [ngModel]="lang()" (ngModelChange)="lang.set($event)">
+          <option value="en">EN</option>
+          <option value="pl">PL</option>
+        </select>
+      </label>
+      <button (click)="goBack()">← Back</button>
+      <button (click)="startNew()">Start new exam</button>
+    </div>
+  </header>
+
+  <ol class="items">
+    <li *ngFor="let it of items(); let i = index" class="item">
+      <h3>#{{ i+1 }} — {{ it.questionText }}</h3>
+
+      <div class="grid">
+        <div class="col">
+          <h4>Your selection</h4>
+          <ul>
+            <li *ngFor="let key of it.selected">
+              <code>{{ key.toUpperCase() }}</code>
+            </li>
+          </ul>
+        </div>
+        <div class="col">
+          <h4>Correct answer(s)</h4>
+          <ul>
+            <li *ngFor="let key of it.correct">
+              <code>{{ key.toUpperCase() }}</code>
+            </li>
+          </ul>
+        </div>
+        <div class="col verdict" [class.ok]="it.wasCorrect" [class.bad]="!it.wasCorrect">
+          {{ it.wasCorrect ? 'Correct ✅' : 'Incorrect ❌' }}
+        </div>
+      </div>
+
+      <details>
+        <summary>Explanations ({{ lang().toUpperCase() }})</summary>
+        <ul class="exps">
+          <li *ngFor="let key of ['a','b','c','d']">
+            <strong>{{ key.toUpperCase() }}</strong>:
+            <span>{{ (expFor(it, key)?.text) ?? '—' }}</span>
+            <a
+              *ngIf="expFor(it, key)?.url"
+              [attr.href]="expFor(it, key)?.url || null"
+              target="_blank"
+              rel="noopener"
+            >
+              source
+            </a>
+          </li>
+        </ul>
+      </details>
+    </li>
+  </ol>
+</div>

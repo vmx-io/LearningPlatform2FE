@@ -1,0 +1,54 @@
+<div class="profile-wrap" *ngIf="loading()">Loading profile…</div>
+
+<div class="profile-wrap" *ngIf="!loading() && me() as m">
+  <h1>Your Profile</h1>
+
+  <section class="box">
+    <div class="row">
+      <div class="k">Public ID</div>
+      <div class="v mono">{{ m.publicId }}</div>
+      <button (click)="exportKey()">Copy Public ID</button>
+    </div>
+
+    <div class="row">
+      <div class="k">Display name</div>
+      <div class="v">
+        <!-- DO NOT use [(ngModel)] with a signal call; use [ngModel] + (ngModelChange) -->
+        <input
+          type="text"
+          [ngModel]="displayName()"
+          (ngModelChange)="displayName.set($event)"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+      <button (click)="saveName()">Save</button>
+    </div>
+  </section>
+
+  <section class="box">
+    <h3>Restore account on this device</h3>
+    <p>If you cleared cookies or changed device, paste your Public ID to restore access.</p>
+    <button (click)="openRestore()">Restore…</button>
+  </section>
+
+  <!-- Restore modal -->
+  <div class="modal-backdrop" *ngIf="showRestore()">
+    <div class="modal">
+      <h3>Restore account</h3>
+      <p>Paste your Public ID:</p>
+      <input
+        type="text"
+        [ngModel]="restoreId()"
+        (ngModelChange)="restoreId.set($event)"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <div class="actions">
+        <button (click)="doRestore()">Restore</button>
+        <button class="secondary" (click)="closeRestore()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="ok" *ngIf="ok()">{{ ok() }}</p>
+  <p class="err" *ngIf="error()">{{ error() }}</p>
+</div>

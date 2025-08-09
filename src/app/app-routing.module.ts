@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { LearnComponent } from './pages/learn/learn.component';
 import { ExamComponent } from './pages/exam/exam.component';
@@ -6,7 +7,7 @@ import { ExamReviewComponent } from './pages/exam-review/exam-review.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { StatsComponent } from './pages/stats/stats.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'learn', component: LearnComponent },
   { path: 'exam', component: ExamComponent },
@@ -15,3 +16,9 @@ export const routes: Routes = [
   { path: 'stats', component: StatsComponent },
   { path: '**', redirectTo: '' },
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { bindToComponentInputs: true })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
