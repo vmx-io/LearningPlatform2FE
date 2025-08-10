@@ -50,6 +50,7 @@
                   "maximumError": "8kB"
                 }
               ],
+              "baseHref": "/LearningPlatform2FE/",
               "outputHashing": "all"
             },
             "development": {
