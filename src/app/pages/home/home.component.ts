@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-home',
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-
+  constructor(private api: ApiService) {
+    this.api.getMe().subscribe(); // stores publicId if returned
+  }
 }

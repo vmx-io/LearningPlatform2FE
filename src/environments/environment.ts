@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
-    apiBase: '/api/v1'
+    production: true,
+    apiBase: 'https://learningplatform2-640690094775.europe-west1.run.app/api/v1'
   };
   

@@ -1,9 +1,10 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
 import { ApiService } from '../../core/services/api.service';
 import { ExplanationDTO } from '../../core/models/api.models';
-import { FormsModule } from '@angular/forms';
 
 type ReviewItem = {
   questionId: string;
@@ -44,26 +45,36 @@ export class ExamReviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ApiService,
-    public router: Router,          // make public if you want to access in template, or use methods below
+    public router: Router,
     private location: Location
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) { this.error.set('Missing exam id'); this.loading.set(false); return; }
+    if (!id) {
+      this.error.set('Missing exam id');
+      this.loading.set(false);
+      return;
+    }
 
-    // Ensure cookie-based user exists (no-op if already set)
+    // Optional: ensure publicId is cached (no-op if already set)
     this.api.getMe().subscribe({ next: () => {}, error: () => {} });
 
-    fetch(`/api/v1/exams/${id}`, { credentials: 'include' })
-      .then(r => r.json())
-      .then(data => { this.exam.set(data as ExamDetail); this.loading.set(false); })
-      .catch(() => { this.error.set('Failed to load exam'); this.loading.set(false); });
+    this.api.getExam(id).subscribe({
+      next: (res: any) => {
+        this.exam.set(res as ExamDetail);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to load exam');
+        this.loading.set(false);
+      },
+    });
   }
 
   items = computed(() => this.exam()?.items ?? []);
 
-  expFor(item: ReviewItem, key: string): ExplanationDTO | undefined {
+  expFor(item: ReviewItem, key: string) {
     const map = this.lang() === 'en' ? item.explanationsEn : item.explanationsPl;
     return map?.[key];
   }
