@@ -21,17 +21,19 @@
           <!-- <strong>{{ opt.id.toUpperCase() }}.</strong>  -->
           {{ opt.text }}
         </label>
-        <section *ngIf="feedback() as fb" class="option-explanation">
-          <!-- <strong>{{ opt.id.toUpperCase() }}</strong>: -->
+        <section *ngIf="feedback() as fb">
+          <div class="option-explanation" [ngClass]="{'correct': fb.correct.includes(opt.id), 'wrong': !fb.correct.includes(opt.id)}">
+            <!-- <strong>{{ opt.id.toUpperCase() }}</strong>: -->
           <span>{{ fb.explanations[opt.id].text }}</span>
-          <a
-            *ngIf="fb.explanations[opt.id].url"
-            [href]="fb.explanations[opt.id].url"
-            target="_blank"
-            rel="noopener"
-          >
-            source
-          </a>
+            <a
+              *ngIf="fb.explanations[opt.id].url"
+              [href]="fb.explanations[opt.id].url"
+              target="_blank"
+              rel="noopener"
+            >
+              source
+            </a>
+          </div>
         </section>
       </li>
     </ul>
