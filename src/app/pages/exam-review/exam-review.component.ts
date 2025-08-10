@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ApiService } from '../../core/services/api.service';
 import { ExplanationDTO } from '../../core/models/api.models';
+import { FormatExplanationPipe } from '../../shared/pipes/format-explanation.pipe';
 
 type ReviewItem = {
   questionId: string;
@@ -31,7 +32,7 @@ type ExamDetail = {
 @Component({
   selector: 'app-exam-review',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FormatExplanationPipe],
   templateUrl: './exam-review.component.html',
   styleUrls: ['./exam-review.component.scss'],
 })

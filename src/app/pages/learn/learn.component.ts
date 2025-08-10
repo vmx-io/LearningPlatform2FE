@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { ApiService } from '../../core/services/api.service';
 import { QuestionDTO } from '../../core/models/api.models';
+import { FormatExplanationPipe } from '../../shared/pipes/format-explanation.pipe';
 
 type Feedback = {
   isCorrect: boolean;
@@ -13,7 +14,7 @@ type Feedback = {
 @Component({
   selector: 'app-learn',
   standalone: true,
-  imports: [CommonModule, FormsModule],               
+  imports: [CommonModule, FormsModule, FormatExplanationPipe],               
   templateUrl: './learn.component.html',
   styleUrls: ['./learn.component.scss'],
 })
