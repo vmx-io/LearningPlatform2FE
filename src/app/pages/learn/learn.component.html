@@ -22,7 +22,7 @@
           {{ opt.text }}
         </label>
         <section *ngIf="feedback() as fb">
-          <div class="option-explanation" [ngClass]="{'correct': fb.correct.includes(opt.id), 'wrong': !fb.correct.includes(opt.id)}">
+          <div class="option-explanation" [ngClass]="{'correct': fb.correct.includes(opt.id), 'wrong': isSelected(opt.id) && !fb.correct.includes(opt.id)}">
             <!-- <strong>{{ opt.id.toUpperCase() }}</strong>: -->
           <span>{{ fb.explanations[opt.id].text }}</span>
             <a

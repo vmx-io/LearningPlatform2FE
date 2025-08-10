@@ -7,9 +7,14 @@
   margin: 12px 0 20px;
 
   .card {
-    border: 1px solid #eee; border-radius: 10px; padding: 12px;
-    background: #fafafa;
-    .k { font-size: .85rem; color: #666; }
+    background: rgba(231, 231, 231, 0.53);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(223, 223, 223, 0.654);
+    padding: 12px;
+    .k { font-size: .85rem; color: #828282; }
     .v { font-size: 1.25rem; font-weight: 700; margin-top: 6px; }
   }
 }
