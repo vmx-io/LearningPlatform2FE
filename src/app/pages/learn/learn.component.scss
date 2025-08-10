@@ -136,3 +136,34 @@
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(155, 0, 0, 0.3);
 }
+
+.learn-footer .nav-row a {
+  display: inline-block;
+  padding: 8px 18px;
+  margin: 0 4px;
+  border-radius: 8px;
+  background: #0a7b28;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-align: center;
+}
+.learn-footer .nav-row a:hover,
+.learn-footer .nav-row a:focus {
+  background: #fff;
+  color: #0a7b28;
+  border: 1px solid #0a7b28;
+  outline: none;
+}
+.learn-footer .nav-row a:active {
+  background: #e6f4ea;
+  color: #0a7b28;
+}
+
+.learn-footer .nav-row {
+  justify-content: center;
+}

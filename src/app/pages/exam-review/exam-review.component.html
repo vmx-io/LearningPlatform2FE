@@ -56,7 +56,7 @@
       <details>
         <summary>Explanations ({{ lang().toUpperCase() }})</summary>
         <ul class="exps">
-          <li *ngFor="let key of ['a','b','c','d']">
+          <li *ngFor="let key of it.correct">
             <strong>{{ key.toUpperCase() }}</strong>:
             <span>{{ (expFor(it, key)?.text) ?? '—' }}</span>
             <a
