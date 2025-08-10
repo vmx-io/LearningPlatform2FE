@@ -74,7 +74,13 @@
         </ul>
   
         <div class="actions">
-          <button (click)="submitCurrent()">Save answer</button>
+            <button
+            (click)="submitCurrent()"
+            [class.saved]="savedByIdx()[currentIdx()]"
+          >
+            {{ savedByIdx()[currentIdx()] ? 'Answer saved' : 'Save answer' }}
+          </button>
+  
           <button class="danger" (click)="finishExam()">Finish exam</button>
         </div>
   

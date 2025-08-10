@@ -103,6 +103,8 @@ export class ExamComponent implements OnInit, OnDestroy {
     return this.selectionsByQid()[q.id] ?? {};
   });
 
+  savedByIdx = signal<Record<number, boolean>>({});
+
   isSelected(opt: string) { return !!this.selection()[opt]; }
 
   // Start exam
@@ -185,16 +187,38 @@ export class ExamComponent implements OnInit, OnDestroy {
     this.persist();
   }
 
-  // Submit answer for current question
-  submitCurrent() {
-    const id = this.examId(); const q = this.q;
-    if (!id || !q) return;
-    const selected = Object.entries(this.selection()).filter(([,v]) => v).map(([k]) => k);
-    this.api.answerExam(id, q.id, selected).subscribe({
-      next: () => { /* saved */ },
-      error: () => { this.error.set('Failed to save answer'); }
-    });
-  }
+// Submit answer for current question
+submitCurrent() {
+  const id = this.examId(); const q = this.q;
+  if (!id || !q) return;
+
+  const selected = Object.entries(this.selection())
+    .filter(([, v]) => v)
+    .map(([k]) => k);
+
+  // Optimistically clear previous error
+  this.error.set(null);
+
+  this.api.answerExam(id, q.id, selected).subscribe({
+    next: () => {
+      // Mark current index as saved
+      const idx = this.currentIdx();
+      const map = { ...this.savedByIdx() };
+      map[idx] = true;
+      this.savedByIdx.set(map);
+
+      // Auto-reset after 3s (remove if you want it to stay green)
+      // window.setTimeout(() => {
+      //   const cur = { ...this.savedByIdx() };
+      //   delete cur[idx];
+      //   this.savedByIdx.set(cur);
+      // }, 3000);
+    },
+    error: () => {
+      this.error.set('Failed to save answer');
+    }
+  });
+}
 
   // Finish exam and go to review
   finishExam() {
