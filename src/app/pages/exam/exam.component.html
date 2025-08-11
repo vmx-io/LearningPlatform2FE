@@ -1,5 +1,59 @@
 <div class="exam-wrap" *ngIf="!examId(); else started">
-    <h1>Mock Exam</h1>
+    <section class="how-to card">
+        <h2>How to take an exam</h2>
+      
+        <p class="lead">
+          This mock exam simulates the real test conditions. You can choose the number
+          of questions and duration before starting.
+        </p>
+      
+        <details open>
+          <summary>📝 Exam format</summary>
+          <ul>
+            <li>Multiple-choice and multi-select questions.</li>
+            <li>Each question shows possible answers (A, B, C, D).</li>
+            <li>Select the answer(s) and click <strong>Save answer</strong>.</li>
+            <li>Saved answers turn the button green with “Answer saved”.</li>
+          </ul>
+        </details>
+      
+        <details>
+          <summary>⏱ Timer</summary>
+          <ul>
+            <li>The countdown starts when the exam begins.</li>
+            <li>You can see remaining time at the top of the page.</li>
+            <li>When time runs out, the exam automatically finishes.</li>
+          </ul>
+        </details>
+      
+        <details>
+          <summary>📍 Navigation</summary>
+          <ul>
+            <li>Use <strong>Prev</strong> / <strong>Next</strong> to move between questions.</li>
+            <li>Click numbers in the navigation bar to jump to specific questions.</li>
+            <li>Click the <strong>Map</strong> button to see all questions at once —
+              answered ones are highlighted green.</li>
+          </ul>
+        </details>
+      
+        <details>
+          <summary>🎯 Scoring</summary>
+          <ul>
+            <li>Each correct answer is worth 1 point.</li>
+            <li>Unanswered questions are counted as incorrect.</li>
+            <li>Passing score: <strong>61%</strong>.</li>
+          </ul>
+        </details>
+      
+        <details>
+          <summary>💾 Saving progress</summary>
+          <ul>
+            <li>Your progress is saved locally as you answer questions.</li>
+            <li>You can refresh or close the page and continue later, as long as the
+                timer hasn't expired.</li>
+          </ul>
+        </details>
+      </section>
     <p>Start a new exam (defaults are for development; adjust as you like).</p>
   
     <form class="start-form" (submit)="$event.preventDefault(); startExam()">
