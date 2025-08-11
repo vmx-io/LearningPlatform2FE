@@ -3,6 +3,92 @@
 <div class="profile-wrap" *ngIf="!loading() && me() as m">
   <h1>Your Profile</h1>
 
+  <section class="how-it-works card">
+    <h2>How it works</h2>
+  
+    <p class="lead">
+      This app identifies you with a lightweight key (no password, no email required).
+      It’s designed to work both locally and on GitHub Pages with a backend on Cloud Run.
+    </p>
+  
+    <details open>
+      <summary>🔑 Your identity</summary>
+      <ul>
+        <li>
+          You get a unique <code>publicId</code> when you first visit.
+        </li>
+        <li>
+          The app stores it in <strong>localStorage</strong> and also tries to set a <strong>cookie</strong>.
+          Some browsers block cross-site cookies, so the frontend also sends the ID via
+          the <code>X-Public-Id</code> header to the API.
+        </li>
+        <li>
+          This ID links your <em>stats</em>, <em>exam history</em> and <em>profile (display name)</em>.
+        </li>
+      </ul>
+    </details>
+  
+    <details>
+      <summary>🧰 Restore & backup</summary>
+      <ul>
+        <li>
+          Use <strong>“Export my key”</strong> to copy your <code>publicId</code>.
+        </li>
+        <li>
+          If you clear your browser data or switch devices, paste that key into
+          <strong>“Restore my account”</strong> to recover your exams & stats.
+        </li>
+        <li>
+          Lost the key? You’ll get a new anonymous account (previous data won’t be linked).
+        </li>
+      </ul>
+    </details>
+  
+    <details>
+      <summary>🔒 Privacy</summary>
+      <ul>
+        <li>No emails or passwords are required.</li>
+        <li>
+          We store: questions, your answers, exam results, display name (optional), and your
+          anonymous <code>publicId</code>.
+        </li>
+        <li>You can change your display name anytime.</li>
+      </ul>
+    </details>
+  
+    <details>
+      <summary>❓ Troubleshooting</summary>
+      <ul>
+        <li>
+          If the app doesn’t remember you between visits:
+          <ul>
+            <li>Make sure your browser allows <em>localStorage</em>.</li>
+            <li>
+              Cross-site cookies might be blocked—this is normal. The app still works using
+              <code>X-Public-Id</code>.
+            </li>
+          </ul>
+        </li>
+        <li>
+          If stats/exams look empty on a new device:
+          <ul>
+            <li>Use <strong>Restore</strong> with your saved <code>publicId</code>.</li>
+          </ul>
+        </li>
+      </ul>
+    </details>
+  
+    <details>
+      <summary>⚙️ What happens under the hood</summary>
+      <ul>
+        <li>Frontend stores <code>publicId</code> in <strong>localStorage</strong>.</li>
+        <li>API accepts identity from either <strong>cookie</strong> or <code>X-Public-Id</code> header.</li>
+        <li>All exam scoring treats unanswered questions as <strong>incorrect</strong>.</li>
+        <li>Pass mark is <strong>61%</strong>.</li>
+      </ul>
+    </details>
+  </section>  
+
   <section class="box">
     <div class="row">
       <div class="k">Public ID</div>

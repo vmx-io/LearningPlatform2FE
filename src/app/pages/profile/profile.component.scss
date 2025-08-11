@@ -22,3 +22,52 @@
 
 .ok { color: #0a7b28; }
 .err { color: #b00020; }
+
+.how-it-works.card {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+  
+    h2 {
+      margin-top: 0;
+      margin-bottom: .5rem;
+      font-size: 1.25rem;
+    }
+  
+    .lead {
+      color: #555;
+      margin-bottom: 1rem;
+    }
+  
+    details {
+      border-top: 1px dashed rgba(0,0,0,.1);
+      padding: .75rem 0;
+  
+      &:first-of-type { border-top: 0; padding-top: 0; }
+  
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        outline: none;
+        list-style: none;
+      }
+  
+      summary::-webkit-details-marker { display: none; }
+    }
+  
+    ul {
+      margin: .5rem 0 0 1.25rem;
+    }
+  
+    code {
+      background: #f6f8fa;
+      border-radius: 6px;
+      padding: 0 .35rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    }
+  }
+  
