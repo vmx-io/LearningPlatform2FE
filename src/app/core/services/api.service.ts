@@ -11,7 +11,7 @@ const PUBKEY = 'publicId';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private base = environment.apiBase;
+  private base = environment.production ? environment.apiBase : environment.apiBaseLocal;
 
   constructor(private http: HttpClient) {}
 
@@ -81,12 +81,12 @@ export class ApiService {
   }
 
   // ---- Questions (learn mode) ----
-  getQuestions() {
-    return this.http.get<QuestionDTO[]>(
-      `${this.base}/questions`,
-      { headers: this.headers(), withCredentials: true }
-    );
-  }
+  // getQuestions() {
+  //   return this.http.get<QuestionDTO[]>(
+  //     `${this.base}/questions`,
+  //     { headers: this.headers(), withCredentials: true }
+  //   );
+  // }
 
   learnAnswer(body: LearnAnswerReq) {
     return this.http.post<LearnAnswerRes>(
@@ -135,5 +135,36 @@ export class ApiService {
       `${this.base}/stats`,
       { headers: this.headers(), withCredentials: true }
     );
+  }
+
+  getQuestions(tag?: string) {
+    const url = tag ? `${this.base}/questions?tag=${encodeURIComponent(tag)}` : `${this.base}/questions`;
+    return this.http.get<QuestionDTO[]>(url, { withCredentials: true });
+  }
+
+  getTags() {
+    return this.http.get<{ tag: string; count: number }[]>(
+      `${this.base}/tags`,
+      { withCredentials: true }
+    );
+  }
+  
+  getStatsSummary() {
+    return this.http.get<{ tag: string; answered: number; correct: number; accuracy: number }[]>(
+      `${this.base}/stats/summary`,
+      { withCredentials: true }
+    );
+  }
+  
+  getStatsByTag(tag: string, days = 30) {
+    const p = new URLSearchParams({ tag, days: String(days) });
+    return this.http.get<{
+      tag: string;
+      windowDays: number;
+      totalAnswers: number;
+      correctAnswers: number;
+      accuracy?: number | null;
+      completedExams: number;
+    }>(`${this.base}/stats/by-tag?${p.toString()}`, { withCredentials: true });
   }
 }

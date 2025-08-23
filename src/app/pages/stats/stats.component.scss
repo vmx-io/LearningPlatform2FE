@@ -41,3 +41,16 @@
 }
 
 .err { color: #b00020; }
+
+.stats-wrap { max-width: 1000px; margin: 0 auto; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin: 12px 0; }
+.cards.slim { grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); }
+.card { padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
+.k { font-size: 12px; color: #666; }
+.v { font-size: 20px; font-weight: 600; }
+.err { color: #b00020; }
+.table table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; }
+.table .head { display: flex; align-items: center; justify-content: space-between; }
+.by-tag .head { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
+select { padding: 6px 8px; }

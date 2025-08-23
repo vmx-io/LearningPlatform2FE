@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
+import { FormsModule } from '@angular/forms';
 
 type StatsResponse = {
   totalExams: number;
@@ -38,15 +39,30 @@ type ExamsPage = {
 @Component({
   selector: 'app-stats',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './stats.component.html',
   styleUrls: ['./stats.component.scss'],
 })
 export class StatsComponent implements OnInit {
-  // Stats
+  // Global stats
   loading = signal(true);
   error = signal<string | null>(null);
   data = signal<StatsResponse | null>(null);
+
+  // Per-tag summary + picker
+  tagsLoading = signal(true);
+  tagsError = signal<string | null>(null);
+  tags = signal<{ tag: string; count: number }[]>([]);
+  summaryLoading = signal(true);
+  summaryError = signal<string | null>(null);
+  summary = signal<{ tag: string; answered: number; correct: number; accuracy: number }[]>([]);
+  selectedTag = signal<string | null>(null);
+
+  // Per-tag detail window
+  detailLoading = signal(false);
+  detailError = signal<string | null>(null);
+  windowDays = signal(30);
+  detail = signal<{ tag: string; windowDays: number; totalAnswers: number; correctAnswers: number; accuracy?: number | null; completedExams: number } | null>(null);
 
   // Exams list
   examsLoading = signal(true);
@@ -58,10 +74,22 @@ export class StatsComponent implements OnInit {
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
-    // stats
+    // global stats
     this.api.getStats().subscribe({
       next: (res) => { this.data.set(res as StatsResponse); this.loading.set(false); },
       error: () => { this.error.set('Failed to load stats'); this.loading.set(false); }
+    });
+
+    // tags for picker
+    this.api.getTags().subscribe({
+      next: (res) => { this.tags.set(res); this.tagsLoading.set(false); },
+      error: () => { this.tagsError.set('Failed to load categories'); this.tagsLoading.set(false); }
+    });
+
+    // per-tag summary
+    this.api.getStatsSummary().subscribe({
+      next: (res) => { this.summary.set(res); this.summaryLoading.set(false); },
+      error: () => { this.summaryError.set('Failed to load per-tag summary'); this.summaryLoading.set(false); }
     });
 
     // exams (first page)
@@ -70,12 +98,25 @@ export class StatsComponent implements OnInit {
 
   // Derived
   tagRows = computed(() => {
-    const d = this.data(); if (!d || !d.accuracyByTag) return [];
-    const acc = d.accuracyByTag ?? {};
-    const cnt = d.answeredByTag ?? {};
-    return Object.keys(acc)
-      .map(tag => ({ tag, accuracy: acc[tag], answered: cnt[tag] ?? 0 }))
-      .sort((a,b) => b.answered - a.answered);
+    // join /tags (counts) + /stats/summary (answered/accuracy)
+    const byTagSummary = new Map(this.summary().map(r => [r.tag, r]));
+    const rows = this.tags().map(t => {
+      const s = byTagSummary.get(t.tag);
+      return {
+        tag: t.tag,
+        available: t.count,                    // ile pytań w bazie
+        answered: s?.answered ?? 0,            // ile odpowiedzi oddano
+        accuracy: s?.accuracy ?? 0
+      };
+    });
+    // sort: najwięcej odpowiedzi najpierw
+    return rows.sort((a,b) => b.answered - a.answered || a.tag.localeCompare(b.tag));
+  });
+
+  selectedSummaryRow = computed(() => {
+    const tag = this.selectedTag();
+    if (!tag) return null;
+    return this.summary().find(r => r.tag === tag) ?? null;
   });
 
   pagesTotal = computed(() => {
@@ -86,6 +127,7 @@ export class StatsComponent implements OnInit {
   hasPrev = computed(() => this.page() > 1);
   hasNext = computed(() => this.page() < this.pagesTotal());
 
+  // Actions
   loadPage(p: number) {
     const limit = this.pageSize();
     const offset = (p - 1) * limit;
@@ -101,6 +143,27 @@ export class StatsComponent implements OnInit {
         this.examsError.set('Failed to load exams');
         this.examsLoading.set(false);
       }
+    });
+  }
+
+  pickTag(tag: string) {
+    this.selectedTag.set(tag);
+    this.loadDetail(); // auto-load detail for current windowDays
+  }
+
+  changeWindowDays(days: number) {
+    this.windowDays.set(days);
+    if (this.selectedTag()) this.loadDetail();
+  }
+
+  loadDetail() {
+    const tag = this.selectedTag(); if (!tag) return;
+    const days = this.windowDays();
+    this.detailLoading.set(true);
+    this.detailError.set(null);
+    this.api.getStatsByTag(tag, days).subscribe({
+      next: (res) => { this.detail.set(res); this.detailLoading.set(false); },
+      error: () => { this.detailError.set('Failed to load tag stats'); this.detailLoading.set(false); }
     });
   }
 

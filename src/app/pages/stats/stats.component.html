@@ -3,6 +3,7 @@
 <div class="stats-wrap" *ngIf="!loading() && data() as s">
   <h1>Your Statistics</h1>
 
+  <!-- KPI Cards -->
   <section class="cards">
     <div class="card">
       <div class="k">Total answers</div>
@@ -42,30 +43,85 @@
     </div>
   </section>
 
-  <!-- <section class="table">
-    <h2>Accuracy by tag</h2>
-    <table *ngIf="tagRows().length; else noTags">
+  <!-- Per-Category Progress -->
+  <section class="table">
+    <h2>Progress by category</h2>
+
+    <div *ngIf="tagsLoading()">Loading categories…</div>
+    <p class="err" *ngIf="tagsError()">{{ tagsError() }}</p>
+
+    <table *ngIf="!tagsLoading() && !tagsError() && tagRows().length; else noTags">
       <thead>
         <tr>
-          <th>Tag</th>
+          <th>Category</th>
+          <th>Available Qs</th>
           <th>Answered</th>
           <th>Accuracy</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let r of tagRows()">
           <td>{{ r.tag }}</td>
+          <td>{{ r.available }}</td>
           <td>{{ r.answered }}</td>
           <td>{{ r.accuracy | number:'1.0-2' }}%</td>
+          <td><button (click)="pickTag(r.tag)">View details</button></td>
         </tr>
       </tbody>
     </table>
-    <ng-template #noTags>
-      <p>No tag data yet — answer a few questions first.</p>
-    </ng-template>
-  </section> -->
 
-  <!-- NEW: My Exams -->
+    <ng-template #noTags>
+      <p>No category data yet — answer a few questions first.</p>
+    </ng-template>
+  </section>
+
+  <!-- Per-Category Detail -->
+  <section class="by-tag" *ngIf="selectedTag() as tag">
+    <div class="head">
+      <h2>Category: {{ tag }}</h2>
+      <div class="controls">
+        <label>
+          Window:
+          <select [ngModel]="windowDays()" (ngModelChange)="changeWindowDays($event)">
+            <option [ngValue]="7">Last 7 days</option>
+            <option [ngValue]="30">Last 30 days</option>
+            <option [ngValue]="90">Last 90 days</option>
+            <option [ngValue]="365">Last 365 days</option>
+            <option [ngValue]="9999">All time</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="detailLoading()">Loading…</div>
+    <p class="err" *ngIf="detailError()">{{ detailError() }}</p>
+
+    <div class="cards slim" *ngIf="!detailLoading() && detail() as d">
+      <div class="card">
+        <div class="k">Answers (window)</div>
+        <div class="v">{{ d.totalAnswers }}</div>
+      </div>
+      <div class="card">
+        <div class="k">Accuracy (window)</div>
+        <div class="v">{{ (d.accuracy ?? 0) | number:'1.0-2' }}%</div>
+      </div>
+      <div class="card">
+        <div class="k">Distinct exams (window)</div>
+        <div class="v">{{ d.completedExams }}</div>
+      </div>
+      <div class="card" *ngIf="selectedSummaryRow() as sr">
+        <div class="k">All-time answered</div>
+        <div class="v">{{ sr.answered }}</div>
+      </div>
+      <div class="card" *ngIf="selectedSummaryRow() as sr">
+        <div class="k">All-time accuracy</div>
+        <div class="v">{{ sr.accuracy | number:'1.0-2' }}%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- My Exams -->
   <section class="my-exams">
     <div class="head">
       <h2>My Exams</h2>
