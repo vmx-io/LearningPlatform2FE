@@ -151,6 +151,10 @@ export class StatsComponent implements OnInit {
     this.loadDetail(); // auto-load detail for current windowDays
   }
 
+  closeModal() {
+    this.selectedTag.set(null);
+  }
+
   changeWindowDays(days: number) {
     this.windowDays.set(days);
     if (this.selectedTag()) this.loadDetail();

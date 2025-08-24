@@ -1,18 +1,21 @@
 <!-- PICKER: choose category -->
 <div *ngIf="mode() === 'picker'" class="learn-wrap">
   <div *ngIf="mode() === 'picker'" class="learn-picker">
-    <h2>Choose a category</h2>
+    <h2 style="text-align: center;">Choose a category</h2>
 
     <div *ngIf="loading()">Loading…</div>
 
     <ng-container *ngIf="!loading()">
-      <ul class="tag-list">
-        <li *ngFor="let t of tags()">
+      <div class="tag-cards">
+        <div class="card" *ngFor="let t of tags()">
           <button (click)="startWithTag(t.tag)">
-            {{ t.tag }} <small>({{ t.count }})</small>
+            <div class="tag-name">{{ t.tag }}</div>
+            <div class="tag-count">({{ t.count }})</div>
           </button>
-        </li>
-      </ul>
+        </div>
+      </div>
+
+      <h2 style="text-align: center;">Or...</h2>
 
       <div class="all-actions">
         <button class="secondary" (click)="startAll()">Start with all questions</button>
