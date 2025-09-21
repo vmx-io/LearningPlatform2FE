@@ -39,6 +39,11 @@ export class LearnComponent {
   showJump = signal(false);
   jumpValueStr = '';
 
+  // explanation modal
+  showExplanationModal = signal(false);
+  explanationLoading = signal(false);
+  explanationContent = signal<string | null>(null);
+
   constructor(
     private api: ApiService,
     private route: ActivatedRoute,
@@ -231,5 +236,33 @@ export class LearnComponent {
   }
   backToPicker() {
     this.router.navigate([], { queryParams: {} });
+  }
+
+  // explanation modal methods
+  showExplanation() {
+    const q = this.q;
+    if (!q) return;
+    
+    this.showExplanationModal.set(true);
+    this.explanationLoading.set(true);
+    this.explanationContent.set(null);
+    
+    this.api.getQuestionExplanation(q.id).subscribe({
+      next: (htmlContent) => {
+        this.explanationContent.set(htmlContent);
+        this.explanationLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Failed to load explanation:', error);
+        this.explanationContent.set(null);
+        this.explanationLoading.set(false);
+      }
+    });
+  }
+
+  closeExplanation() {
+    this.showExplanationModal.set(false);
+    this.explanationContent.set(null);
+    this.explanationLoading.set(false);
   }
 }

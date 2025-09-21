@@ -81,6 +81,7 @@
       <div class="actions">
         <button (click)="submit()">Check</button>
         <button class="secondary" (click)="resetCurrent()">Reset</button>
+        <button class="secondary" (click)="showExplanation()">Detailed explanation</button>
       </div>
 
       <section *ngIf="feedback() as fb" class="feedback">
@@ -120,5 +121,25 @@
         </button>
       </div>
     </footer>
+  </div>
+</div>
+
+<!-- Explanation Popup Modal -->
+<div *ngIf="showExplanationModal()" class="modal-overlay" (click)="closeExplanation()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Detailed Explanation</h3>
+      <button class="close-button" (click)="closeExplanation()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="explanationLoading()" class="loading">Loading explanation...</div>
+      <div *ngIf="!explanationLoading() && explanationContent()" 
+           class="explanation-content" 
+           [innerHTML]="explanationContent()">
+      </div>
+      <div *ngIf="!explanationLoading() && !explanationContent()" class="no-explanation">
+        No detailed explanation available for this question.
+      </div>
+    </div>
   </div>
 </div>

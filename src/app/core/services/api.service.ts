@@ -145,14 +145,14 @@ export class ApiService {
   getTags() {
     return this.http.get<{ tag: string; count: number }[]>(
       `${this.base}/tags`,
-      { withCredentials: true }
+      { headers: this.headers(), withCredentials: true }
     );
   }
   
   getStatsSummary() {
     return this.http.get<{ tag: string; answered: number; correct: number; accuracy: number }[]>(
       `${this.base}/stats/summary`,
-      { withCredentials: true }
+      { headers: this.headers(), withCredentials: true }
     );
   }
   
@@ -165,6 +165,13 @@ export class ApiService {
       correctAnswers: number;
       accuracy?: number | null;
       completedExams: number;
-    }>(`${this.base}/stats/by-tag?${p.toString()}`, { withCredentials: true });
+    }>(`${this.base}/stats/by-tag?${p.toString()}`, { headers: this.headers(), withCredentials: true });
+  }
+
+  getQuestionExplanation(questionId: string) {
+    return this.http.get(
+      `${this.base}/questions/explanation/${encodeURIComponent(questionId)}`,
+      { headers: this.headers(), withCredentials: true, responseType: 'text' }
+    );
   }
 }
