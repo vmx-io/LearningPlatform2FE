@@ -4,7 +4,8 @@ import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
   LearnAnswerReq, LearnAnswerRes,
-  QuestionDTO, StartExamRes, ExamFinishRes, ExamSummary
+  QuestionDTO, StartExamRes, ExamFinishRes, ExamSummary,
+  VoteStatusRes, VoteReq, VoteRes
 } from '../models/api.models';
 
 const PUBKEY = 'publicId';
@@ -172,6 +173,24 @@ export class ApiService {
     return this.http.get(
       `${this.base}/questions/explanation/${encodeURIComponent(questionId)}`,
       { headers: this.headers(), withCredentials: true, responseType: 'text' }
+    );
+  }
+
+  // ---- Voting ----
+  getQuestionVote(questionId: string, publicId: string) {
+    const params = new URLSearchParams({ publicId });
+    return this.http.get<VoteStatusRes>(
+      `${this.base}/questions/${encodeURIComponent(questionId)}/vote?${params.toString()}`,
+      { headers: this.headers(), withCredentials: true }
+    );
+  }
+
+  voteQuestion(questionId: string, vote: boolean, publicId: string) {
+    const body: VoteReq = { vote, publicId };
+    return this.http.post<VoteRes>(
+      `${this.base}/questions/${encodeURIComponent(questionId)}/vote`,
+      body,
+      { headers: this.headers(), withCredentials: true }
     );
   }
 }

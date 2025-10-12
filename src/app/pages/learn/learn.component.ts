@@ -1,7 +1,8 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { QuestionDTO } from '../../core/models/api.models';
 import { FormatExplanationPipe } from '../../shared/pipes/format-explanation.pipe';
@@ -44,6 +45,12 @@ export class LearnComponent {
   explanationLoading = signal(false);
   explanationContent = signal<string | null>(null);
 
+  // voting state
+  trustScore = signal<number>(0);
+  hasVoted = signal<boolean>(false);
+  currentVote = signal<boolean | null>(null);
+  votingLoading = signal<boolean>(false);
+
   constructor(
     private api: ApiService,
     private route: ActivatedRoute,
@@ -69,6 +76,14 @@ export class LearnComponent {
         this.mode.set('learn');
         this.selectedTag.set(t);
         this.loadQuestions(t);
+      }
+    });
+
+    // Watch for question changes to load voting data
+    effect(() => {
+      const questionId = this.currentQuestionId();
+      if (questionId) {
+        this.loadVotingData();
       }
     });
   }
@@ -117,6 +132,12 @@ export class LearnComponent {
     const q = this.q;
     if (!q) return null;
     return this.feedbackByQid()[q.id] ?? null;
+  });
+
+  // Watch for question changes to load voting data
+  currentQuestionId = computed(() => {
+    const q = this.q;
+    return q?.id || null;
   });
 
   toggle(opt: string) {
@@ -264,5 +285,73 @@ export class LearnComponent {
     this.showExplanationModal.set(false);
     this.explanationContent.set(null);
     this.explanationLoading.set(false);
+  }
+
+  // ---- Voting methods ----
+  
+  private loadVotingData() {
+    const questionId = this.currentQuestionId();
+    const publicId = this.api.publicId;
+    
+    if (!questionId || !publicId) {
+      // Reset voting state if no question or publicId
+      this.trustScore.set(0);
+      this.hasVoted.set(false);
+      this.currentVote.set(null);
+      return;
+    }
+
+    this.api.getQuestionVote(questionId, publicId).subscribe({
+      next: (response) => {
+        this.trustScore.set(response.trustScore);
+        this.hasVoted.set(response.hasVoted);
+        this.currentVote.set(response.hasVoted ? (response.vote ?? null) : null);
+      },
+      error: (error) => {
+        console.error('Failed to load voting data:', error);
+        // Reset to default state on error
+        this.trustScore.set(0);
+        this.hasVoted.set(false);
+        this.currentVote.set(null);
+      }
+    });
+  }
+
+  async vote(vote: boolean) {
+    const questionId = this.currentQuestionId();
+    const publicId = this.api.publicId;
+    
+    if (!questionId || !publicId || this.votingLoading()) {
+      return;
+    }
+
+    // Always send the same vote value when clicking the same button
+    const voteToSend = vote;
+
+    this.votingLoading.set(true);
+
+    try {
+      const response = await firstValueFrom(this.api.voteQuestion(questionId, voteToSend, publicId));
+      
+      if (response) {
+        this.trustScore.set(response.trustScore);
+        // Always update to show the vote was cast
+        this.hasVoted.set(true);
+        this.currentVote.set(response.vote);
+      }
+    } catch (error) {
+      console.error('Failed to vote:', error);
+      // Could add toast notification here
+    } finally {
+      this.votingLoading.set(false);
+    }
+  }
+
+  upvote() {
+    this.vote(true);
+  }
+
+  downvote() {
+    this.vote(false);
   }
 }

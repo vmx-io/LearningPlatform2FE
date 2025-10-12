@@ -53,4 +53,21 @@ export interface QuestionDTO {
     questionCount: number;
     passed?: boolean | null;
   }
+
+  // Voting interfaces
+  export interface VoteStatusRes {
+    hasVoted: boolean;
+    vote?: boolean;
+    trustScore: number;
+  }
+
+  export interface VoteReq {
+    vote: boolean;
+    publicId: string;
+  }
+
+  export interface VoteRes {
+    trustScore: number;
+    vote: boolean;
+  }
   

@@ -435,3 +435,117 @@
     padding: 20px;
   }
 }
+
+/* Voting Module Styles */
+.voting-module {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+
+  .voting-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .vote-btn {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      background: #fff;
+      color: #6c757d;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      user-select: none;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      &.upvote {
+        &:hover:not(:disabled) {
+          border-color: #28a745;
+          color: #28a745;
+        }
+
+        &.active {
+          background: #28a745;
+          border-color: #28a745;
+          color: #fff;
+        }
+      }
+
+      &.downvote {
+        &:hover:not(:disabled) {
+          border-color: #dc3545;
+          color: #dc3545;
+        }
+
+        &.active {
+          background: #dc3545;
+          border-color: #dc3545;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .trust-score {
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+
+    .score-value {
+      font-weight: 600;
+      color: #0a7b28;
+      font-size: 16px;
+    }
+  }
+}
+
+// Responsive design for voting module
+@media (max-width: 768px) {
+  .voting-module {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .voting-buttons {
+      .vote-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+    }
+
+    .trust-score {
+      font-size: 13px;
+
+      .score-value {
+        font-size: 15px;
+      }
+    }
+  }
+}
