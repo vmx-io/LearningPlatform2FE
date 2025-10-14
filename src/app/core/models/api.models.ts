@@ -70,4 +70,28 @@ export interface QuestionDTO {
     trustScore: number;
     vote: boolean;
   }
+
+  // Comment interfaces
+  export interface Comment {
+    id: number;
+    userDisplayName: string;
+    content: string;
+    likesCount: number;
+    likedByCurrentUser: boolean;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  export interface CreateCommentReq {
+    content: string;
+  }
+
+  export interface UpdateCommentReq {
+    content: string;
+  }
+
+  export interface CommentLikeRes {
+    likesCount: number;
+    likedByCurrentUser: boolean;
+  }
   

@@ -1,0 +1,122 @@
+<div class="comments-section">
+  <!-- Header with toggle -->
+  <div class="comments-header">
+    <h3>Discussion</h3>
+    <button 
+      class="toggle-btn"
+      (click)="toggleExpanded()"
+      [attr.aria-expanded]="isExpanded()">
+      {{ isExpanded() ? 'Hide comments' : 'Show comments' }}
+    </button>
+  </div>
+
+  <!-- Comments body (collapsible) -->
+  <div class="comments-body" [class.expanded]="isExpanded()">
+    <!-- Loading state -->
+    <div *ngIf="loading()" class="loading">
+      Loading comments...
+    </div>
+
+    <!-- Comments list -->
+    <div *ngIf="!loading()" class="comments-list">
+      <div *ngFor="let comment of sortedComments()" class="comment">
+        <!-- Comment header -->
+        <div class="comment-header">
+          <span class="comment-author">{{ comment.userDisplayName }}</span>
+          <span class="comment-time">{{ formatRelativeTime(comment.createdAt) }}</span>
+        </div>
+
+        <!-- Comment content -->
+        <div class="comment-content">
+          <!-- Edit mode -->
+          <div *ngIf="editing() === comment.id" class="edit-mode">
+            <textarea 
+              [(ngModel)]="editContent"
+              placeholder="Edit your comment..."
+              rows="3"
+              class="edit-textarea">
+            </textarea>
+            <div class="edit-actions">
+              <button 
+                class="save-btn"
+                [disabled]="deleting() === comment.id || !editContent().trim()"
+                (click)="saveEdit(comment.id)">
+                {{ deleting() === comment.id ? 'Saving...' : 'Save' }}
+              </button>
+              <button 
+                class="cancel-btn"
+                [disabled]="deleting() === comment.id"
+                (click)="cancelEdit()">
+                Cancel
+              </button>
+            </div>
+          </div>
+
+          <!-- Display mode -->
+          <div *ngIf="editing() !== comment.id" class="comment-text">
+            {{ comment.content }}
+          </div>
+        </div>
+
+        <!-- Comment actions -->
+        <div class="comment-actions">
+          <!-- Like button -->
+          <button 
+            class="like-btn"
+            [class.liked]="comment.likedByCurrentUser"
+            [disabled]="liking() === comment.id"
+            (click)="toggleLike(comment)">
+            <span class="like-icon">{{ comment.likedByCurrentUser ? '❤️' : '🤍' }}</span>
+            <span class="like-count">{{ comment.likesCount }}</span>
+            <span *ngIf="liking() === comment.id" class="loading-text">...</span>
+          </button>
+
+          <!-- Edit/Delete buttons (only for own comments) -->
+          <div *ngIf="isOwnComment(comment)" class="owner-actions">
+            <button 
+              class="edit-btn"
+              [disabled]="editing() !== null || deleting() === comment.id"
+              (click)="startEdit(comment)">
+              Edit
+            </button>
+            <button 
+              class="delete-btn"
+              [disabled]="deleting() === comment.id || editing() !== null"
+              (click)="deleteComment(comment.id)">
+              {{ deleting() === comment.id ? 'Deleting...' : 'Delete' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- No comments message -->
+      <div *ngIf="sortedComments().length === 0" class="no-comments">
+        No comments yet. Be the first to start the discussion!
+      </div>
+    </div>
+
+    <!-- New comment form -->
+    <div *ngIf="isAuthenticated()" class="new-comment">
+      <textarea 
+        [(ngModel)]="newCommentContent"
+        placeholder="Share your thoughts..."
+        rows="3"
+        class="comment-textarea"
+        [disabled]="posting()">
+      </textarea>
+      <div class="post-actions">
+        <button 
+          class="post-btn"
+          [disabled]="posting() || !newCommentContent().trim()"
+          (click)="postComment()">
+          {{ posting() ? 'Posting...' : 'Post comment' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Not authenticated message -->
+    <div *ngIf="!isAuthenticated()" class="auth-required">
+      Please log in to post comments.
+    </div>
+  </div>
+</div>

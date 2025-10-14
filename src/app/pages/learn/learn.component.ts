@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { QuestionDTO } from '../../core/models/api.models';
 import { FormatExplanationPipe } from '../../shared/pipes/format-explanation.pipe';
+import { CommentsSectionComponent } from '../comments-section/comments-section.component';
 
 type Feedback = {
   isCorrect: boolean;
@@ -16,7 +17,7 @@ type Feedback = {
 @Component({
   selector: 'app-learn',
   standalone: true,
-  imports: [CommonModule, FormsModule, FormatExplanationPipe],
+  imports: [CommonModule, FormsModule, FormatExplanationPipe, CommentsSectionComponent],
   templateUrl: './learn.component.html',
   styleUrls: ['./learn.component.scss'],
 })
@@ -138,6 +139,11 @@ export class LearnComponent {
   currentQuestionId = computed(() => {
     const q = this.q;
     return q?.id || null;
+  });
+
+  // Get current question for comments section
+  currentQuestion = computed(() => {
+    return this.q;
   });
 
   toggle(opt: string) {

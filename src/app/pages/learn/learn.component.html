@@ -109,6 +109,9 @@
         </div>
       </div>
 
+      <!-- Comments Section -->
+      <app-comments-section *ngIf="currentQuestionId()" [questionId]="currentQuestionId()!"></app-comments-section>
+
       <section *ngIf="feedback() as fb" class="feedback">
         <p class="result">
           <strong>Result:</strong>
