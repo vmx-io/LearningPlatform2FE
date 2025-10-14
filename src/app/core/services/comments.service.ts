@@ -86,4 +86,11 @@ export class CommentsService {
   isAuthenticated(): boolean {
     return !!localStorage.getItem('publicId');
   }
+
+  /**
+   * Get current user's publicId from localStorage
+   */
+  getCurrentPublicId(): string | null {
+    return localStorage.getItem('publicId');
+  }
 }

@@ -23,7 +23,7 @@ export class CommentsSectionComponent implements OnInit, OnDestroy, OnChanges {
   editing = signal<number | null>(null);
   deleting = signal<number | null>(null);
   liking = signal<number | null>(null);
-  isExpanded = signal(true);
+  isExpanded = signal(false);
   newCommentContent = signal('');
   editContent = signal('');
 
@@ -234,11 +234,10 @@ export class CommentsSectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   isOwnComment(comment: Comment): boolean {
-    // This would need to be implemented based on your user identification logic
-    // For now, we'll assume we can identify own comments by checking if the user
-    // has a publicId and comparing with some user identifier
-    // In a real implementation, you might compare comment.userId with current user's ID
-    // or check if the comment was created by the current user
-    return false; // Placeholder - implement based on your auth system
+    const currentPublicId = this.commentsService.getCurrentPublicId();
+    if (!currentPublicId) {
+      return false;
+    }
+    return comment.userPublicId === currentPublicId;
   }
 }

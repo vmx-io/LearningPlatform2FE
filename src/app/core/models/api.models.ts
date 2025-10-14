@@ -74,6 +74,7 @@ export interface QuestionDTO {
   // Comment interfaces
   export interface Comment {
     id: number;
+    userPublicId: string;
     userDisplayName: string;
     content: string;
     likesCount: number;
