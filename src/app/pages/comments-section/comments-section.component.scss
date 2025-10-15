@@ -34,11 +34,6 @@
         background: #f0f0f0;
         border-color: #999;
       }
-
-      &:focus {
-        outline: 2px solid #007bff;
-        outline-offset: 2px;
-      }
     }
   }
 
@@ -181,27 +176,11 @@
               color: #e74c3c;
               border-color: #e74c3c;
               background: #fdf2f2;
-
-              .like-icon {
-                animation: heartBeat 0.3s ease;
-              }
             }
 
             &:disabled {
               opacity: 0.6;
               cursor: not-allowed;
-            }
-
-            .like-icon {
-              font-size: 0.9rem;
-            }
-
-            .like-count {
-              font-weight: 500;
-            }
-
-            .loading-text {
-              font-style: italic;
             }
           }
 
@@ -216,6 +195,8 @@
               font-size: 0.8rem;
               cursor: pointer;
               transition: all 0.2s ease;
+              background: #f8f9fa;
+              border: 1px solid #dee2e6;
 
               &:disabled {
                 opacity: 0.6;
@@ -224,23 +205,14 @@
             }
 
             .edit-btn {
-              background: #f8f9fa;
               color: #495057;
-              border: 1px solid #dee2e6;
-
-              &:hover:not(:disabled) {
-                background: #e9ecef;
-              }
+              &:hover:not(:disabled) { background: #e9ecef; }
             }
 
             .delete-btn {
-              background: #f8f9fa;
               color: #dc3545;
-              border: 1px solid #f5c6cb;
-
-              &:hover:not(:disabled) {
-                background: #f5c6cb;
-              }
+              border-color: #f5c6cb;
+              &:hover:not(:disabled) { background: #f5c6cb; }
             }
           }
         }
@@ -323,13 +295,6 @@
   }
 }
 
-// Animations
-@keyframes heartBeat {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
 // Responsive design
 @media (max-width: 768px) {
   .comments-section {
@@ -337,36 +302,11 @@
       padding: 0.75rem 1rem;
       flex-direction: column;
       gap: 0.5rem;
-      align-items: stretch;
-
-      h3 {
-        text-align: center;
-      }
-
-      .toggle-btn {
-        align-self: center;
-      }
     }
 
     .comments-body {
       .comments-list .comment {
         padding: 0.75rem 1rem;
-
-        .comment-header {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.25rem;
-        }
-
-        .comment-actions {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5rem;
-
-          .owner-actions {
-            align-self: flex-end;
-          }
-        }
       }
 
       .new-comment {

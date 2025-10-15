@@ -38,6 +38,7 @@ export interface QuestionDTO {
       questionText: string;
       selected: string[];
       correct: string[];
+      options: Record<string, string>;
       explanationsEn: Record<string, ExplanationDTO>;
       explanationsPl: Record<string, ExplanationDTO>;
       wasCorrect: boolean;

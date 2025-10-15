@@ -225,6 +225,14 @@ export class LearnComponent {
   openJump() {
     this.jumpValueStr = String(this.currentIdx() + 1);
     this.showJump.set(true);
+    // Focus the input field after the modal is rendered
+    setTimeout(() => {
+      const input = document.querySelector('.jump-input') as HTMLInputElement;
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }, 100);
   }
   closeJump() {
     this.showJump.set(false);

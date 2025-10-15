@@ -12,6 +12,7 @@ type ReviewItem = {
   questionText: string;
   selected: string[];
   correct: string[];
+  options: Record<string, string>;
   explanationsEn: Record<string, ExplanationDTO>;
   explanationsPl: Record<string, ExplanationDTO>;
   wasCorrect: boolean;
@@ -86,6 +87,10 @@ export class ExamReviewComponent implements OnInit {
 
   wasSelected(item: ReviewItem, key: string) {
     return item.selected.includes(key);
+  }
+
+  getOptionsArray(options: Record<string, string>) {
+    return Object.entries(options).map(([key, value]) => ({ key, value }));
   }
 
   goBack() {

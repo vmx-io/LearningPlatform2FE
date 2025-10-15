@@ -152,6 +152,39 @@
   </div>
 </div>
 
+<!-- Jump to Question Modal -->
+<div *ngIf="showJump()" class="modal-overlay" (click)="closeJump()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Jump to Question</h3>
+      <button class="close-button" (click)="closeJump()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="jump-modal-content">
+        <p class="jump-instruction">Enter the question number you want to jump to:</p>
+        <div class="input-container">
+          <input 
+            type="number" 
+            [(ngModel)]="jumpValueStr" 
+            placeholder="Enter question number"
+            min="1" 
+            [max]="questions().length"
+            class="jump-input"
+            (keydown.enter)="confirmJump()"
+            (keydown.escape)="closeJump()"
+            #jumpInput
+            (click)="$event.stopPropagation()">
+          <div class="input-hint">Range: 1 - {{ questions().length }}</div>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary" (click)="closeJump()">Cancel</button>
+          <button (click)="confirmJump()">Jump to Question</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Explanation Popup Modal -->
 <div *ngIf="showExplanationModal()" class="modal-overlay" (click)="closeExplanation()">
   <div class="modal-content" (click)="$event.stopPropagation()">

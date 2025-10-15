@@ -31,6 +31,18 @@
     <li *ngFor="let it of items(); let i = index" class="item">
       <h3>#{{ i+1 }} — {{ it.questionText }}</h3>
 
+      <div class="options-section">
+        <h4>Available Options</h4>
+        <div class="options-grid">
+          <div *ngFor="let option of getOptionsArray(it.options)" 
+               class="option-item" 
+               [class.correct-option]="isCorrectKey(it, option.key)">
+            <span class="option-key">{{ option.key.toUpperCase() }}</span>
+            <span class="option-text">{{ option.value }}</span>
+          </div>
+        </div>
+      </div>
+
       <div class="grid">
         <div class="col">
           <h4>Your selection</h4>
